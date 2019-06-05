@@ -13,9 +13,9 @@ node {
 
         // Hard coding until pete can repair the damage
      def HUB_ORG=env.HUB_ORG_DH
-     def HUB_KEY=env.HUB_KEY_FILE_PATH
-     def SFDC_HOST = env.SFDC_HOST
-     def CONNECTED_APP_CONSUMER_KEY=env.CONNECTED_APP_CONSUMER_KEY
+     def HUB_KEY=env.HUB_KEY_FILE_PATH_DH
+     def SFDC_HOST = env.SFDC_HOST_DH
+     def CONNECTED_APP_CONSUMER_KEY=env.CONNECTED_APP_CONSUMER_KEY_DH
     //def HUB_ORG="wade.wegner@acdxgs0hub.org"
     //def HUB_KEY="jenkins/server_adcxgs0hub.my.salesforce.com.key"
     //def SFDC_HOST="https://adcxgs0hub.my.salesforce.com"
