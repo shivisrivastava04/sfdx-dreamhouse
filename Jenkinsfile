@@ -34,7 +34,7 @@ node {
         if (rc != 0) { error 'hub org authorization failed' }
 
         // need to pull out assigned username 
-        rmsg = bat returnStdout: true, script: "\"${SFDX_HOME}sfdx\" force:org:create -f config/workspace-scratch-def.json --setalias test --durationdays 7 --setdefaultusername -y debug"
+        rmsg = bat returnStdout: true, script: "\"${SFDX_HOME}sfdx\" force:org:create -f config/workspace-scratch-def.json --setalias test --durationdays 7 --setdefaultusername"
         printf rmsg
         def jsonSlurper = new JsonSlurperClassic()
         def robj = jsonSlurper.parseText(rmsg)
@@ -44,12 +44,12 @@ node {
         
     }
 	stage('Push To Test Org') {
-        rc = bat returnStatus: true, script: "\"${SFDX_HOME}sfdx\" force:src:push --all --username ${SFDC_USERNAME} -y debug"
+        rc = bat returnStatus: true, script: "\"${SFDX_HOME}sfdx\" force:src:push --all --username ${SFDC_USERNAME}"
         if (rc != 0) {
             error 'push all failed'
         }
         // assign permset
-        rc = bat returnStatus: true, script: "\"${SFDX_HOME}sfdx\" force:permset:assign --username ${SFDC_USERNAME} --name DreamHouse -y debug"
+        rc = bat returnStatus: true, script: "\"${SFDX_HOME}sfdx\" force:permset:assign --username ${SFDC_USERNAME} --name DreamHouse"
         if (rc != 0) {
             error 'push all failed'
         }
@@ -57,7 +57,7 @@ node {
 	 stage('Run Apex Test') {
         bat "mkdir ${RUN_ARTIFACT_DIR}"
         timeout(time: 120, unit: 'SECONDS') {
-            rc = bat returnStatus: true, script: "\"${SFDX_HOME}sfdx\" force:apex:test:run --testlevel RunLocalTests --username ${HUB_ORG} -y debug"
+            rc = bat returnStatus: true, script: "\"${SFDX_HOME}sfdx\" force:apex:test:run --testlevel RunLocalTests --username ${HUB_ORG}"
             if (rc != 0) {
                 error 'apex test run failed'
             }
