@@ -27,20 +27,32 @@ node {
         checkout scm
     }
 
-    withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
-        stage('Deploye Code') {
-            if (isUnix()) {
-                rc = sh returnStatus: true, script: "\"${SFDX_HOME}sfdx\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${JWT_KEY_CRED_ID} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
-            }else{
-                 rc = bat returnStatus: true, script: "\"${SFDX_HOME}sfdx\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${secretKey} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
-            }
-            if (rc != 0) { error 'hub org authorization failed' }
+	stage('Create Scratch Org') {
 
-			println rc
-			
-	
-        }
+        rc = bat returnStatus: true, script: "\"${SFDX_HOME}sfdx\" force:org:authorize -i ${CONNECTED_APP_CONSUMER_KEY} -u ${HUB_ORG} -f ${HUB_KEY} -y debug"
+        if (rc != 0) { error 'hub org authorization failed' }
+
+        // need to pull out assigned username 
+        rmsg = bat returnStdout: true, script: "\"${SFDX_HOME}sfdx\" force:org:create -f config/workspace-scratch-def.json -j -t test -y debug"
+        printf rmsg
+        def jsonSlurper = new JsonSlurperClassic()
+        def robj = jsonSlurper.parseText(rmsg)
+        if (robj.status != "ok") { error 'org creation failed: ' + robj.message }
+        SFDC_USERNAME=robj.username
+        robj = null
+        
     }
+	stage('Push To Test Org') {
+        rc = bat returnStatus: true, script: "\"${SFDX_HOME}sfdx\" force:src:push --all --username ${SFDC_USERNAME} -y debug"
+        if (rc != 0) {
+            error 'push all failed'
+        }
+        // assign permset
+        rc = bat returnStatus: true, script: "\"${SFDX_HOME}sfdx\" force:permset:assign --username ${SFDC_USERNAME} --name DreamHouse -y debug"
+        if (rc != 0) {
+            error 'push all failed'
+        }
+	}
 	 stage('Run Apex Test') {
         bat "mkdir ${RUN_ARTIFACT_DIR}"
         timeout(time: 120, unit: 'SECONDS') {
