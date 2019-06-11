@@ -44,7 +44,7 @@ node {
 	 stage('Run Apex Test') {
         sh "mkdir -p ${RUN_ARTIFACT_DIR}"
         timeout(time: 120, unit: 'SECONDS') {
-            rc = sh returnStatus: true, script: "\"${SFDX_HOME}sfdx\" force:apex:test:run --testlevel RunLocalTests --username ${HUB_ORG} -y debug"
+            rc = bat returnStatus: true, script: "\"${SFDX_HOME}sfdx\" force:apex:test:run --testlevel RunLocalTests --username ${HUB_ORG} -y debug"
             if (rc != 0) {
                 error 'apex test run failed'
             }
