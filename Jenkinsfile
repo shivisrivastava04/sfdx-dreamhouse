@@ -38,16 +38,23 @@ node {
 
 			println rc
 			
-			// need to pull out assigned username
-			if (isUnix()) {
-				rmsg = sh returnStdout: true, script: "\"${SFDX_HOME}sfdx\" force:mdapi:deploy -d manifest/. -u ${HUB_ORG}"
-			}else{
-			   rmsg = bat returnStdout: true, script: "\"${SFDX_HOME}sfdx\" force:mdapi:deploy -d manifest/. -u ${HUB_ORG}"
-			}
 			  
             println rmsg
             println('Hello from a Job DSL script!')
             println(rmsg)
         }
+    }
+	 stage('Run Apex Test') {
+        sh "mkdir -p ${RUN_ARTIFACT_DIR}"
+        timeout(time: 120, unit: 'SECONDS') {
+            rc = sh returnStatus: true, script: "\"${SFDX_HOME}sfdx\" force:apex:test --testlevel RunLocalTests --outputdir ${RUN_ARTIFACT_DIR} --reporter tap --username ${HUB_ORG} -y debug"
+            if (rc != 0) {
+                error 'apex test run failed'
+            }
+        }
+    }
+
+    stage('collect results') {
+        junit keepLongStdio: true, testResults: 'tests/**/*-junit.xml'
     }
 }
