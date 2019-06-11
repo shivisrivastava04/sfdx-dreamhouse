@@ -1,11 +1,11 @@
 {
-  "Company": "Red Dead Company",
-  "Country": "US",
-  "LastName": "Carroll",
-  "Email": "dcarroll@salesforce.com",
-  "Edition": "Developer",
-  "OrgPreferences" : {
-    "S1DesktopEnabled" : true,
-    "ChatterEnabled" : true
+  "cOmpany": "Red Dead Company",
+  "cOuntry": "US",
+  "lastName": "Carroll",
+  "eMail": "dcarroll@salesforce.com",
+  "eDition": "Developer",
+  "orgPreferences" : {
+    "s1DesktopEnabled" : true,
+    "chatterEnabled" : true
   }
 }
