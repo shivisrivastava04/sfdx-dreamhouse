@@ -34,7 +34,7 @@ node {
         if (rc != 0) { error 'hub org authorization failed' }
 
         // need to pull out assigned username 
-        rmsg = bat returnStdout: true, script: "\"${SFDX_HOME}sfdx\" force:org:create -f config/workspace-scratch-def.json --setalias test --durationdays 7 --setdefaultusername"
+        rmsg = bat returnStdout: true, script: "\"${SFDX_HOME}sfdx\" force:org:create -f config\workspace-scratch-def.json --setalias test --durationdays 7 --setdefaultusername"
         printf rmsg
         def jsonSlurper = new JsonSlurperClassic()
         def robj = jsonSlurper.parseText(rmsg)
