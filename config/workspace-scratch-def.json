@@ -1,13 +1,11 @@
 {
-    "orgName": "Dreamhouse",
-    "edition": "Developer",
-    "hasSampleData": "false",
-    "settings": {
-      "orgPreferenceSettings": {
-        "s1DesktopEnabled": true,
-        "selfSetPasswordInApi": true,
-        "chatterEnabled" : true,
-        "s1EncryptedStoragePref2": false
-      }
-    }
+  "company": "Red Dead Company",
+  "country": "US",
+  "lastName": "Carroll",
+  "email": "dcarroll@salesforce.com",
+  "edition": "Developer",
+  "orgPreferences" : {
+    "s1DesktopEnabled" : true,
+    "chatterEnabled" : true
+  }
 }
