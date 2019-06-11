@@ -38,10 +38,7 @@ node {
 
 			println rc
 			
-			  
-            println rmsg
-            println('Hello from a Job DSL script!')
-            println(rmsg)
+	
         }
     }
 	 stage('Run Apex Test') {
